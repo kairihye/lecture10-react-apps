@@ -1,48 +1,36 @@
 import React from 'react';
-import {Form, FormControl, InputGroup, Button, Glyphicon} from 'react-bootstrap';
-import MovieController from './MovieController';
 
+var SAMPLE_MOVIES = [
+  {
+    title: "Star Wars: The Force Awakens", 
+    release_date: "2015-12-15", 
+    poster_url: "https://image.tmdb.org/t/p/w92/weUSwMdQIa3NaXVzwUoIIcAi85d.jpg"
+  },
+  {title: "Zootopia", release_date: "2016-02-11", poster_url: "https://image.tmdb.org/t/p/w92/sM33SANp9z6rXW8Itn7NnG1GOEs.jpg"},
+  {title: "Inception", release_date: "2010-07-14", poster_url: "https://image.tmdb.org/t/p/w92/qmDpIHrmpJINaRKAfWQfftjCdyi.jpg"}
+];
+
+//overall App
 class App extends React.Component {
-
-  constructor(props){
-    super(props);
-    this.state = {movies:[], totalResults:0};
-    this.fetchData("star wars");
-  }
-
-  fetchData(searchTerm) {
-    var thisComponent = this; //work around for scope!
-    MovieController.searchTMDB(searchTerm)
-      .then(function(data) {
-        thisComponent.setState({movies:data.results, totalResults:data.total_results})
-      })
-      // .then((data) => this.setState({movies:data})); //cleaner with arrow func!
-      .catch( (err) => this.setState({movies:[], totalResults:0}));
-  }
-
-
   render() {
     return (
       <div className="container">
         <header>
-          <h1>Movie Data Browser</h1>
+          <h1>Movie Search</h1>
         </header>
-        <SearchForm searchFunction={this.fetchData.bind(this)} resultCount={this.state.totalResults} />
         <main>
-          <MovieTable movies={this.state.movies} />
+          <MovieTable movies={SAMPLE_MOVIES} />
         </main>
       </div>
     );
   }
 }
 
+//table of movie data
 class MovieTable extends React.Component {
-
   render() {
 
-    var movieRows = this.props.movies.map(function(movie){
-      return <MovieRow movie={movie} key={movie.id} />;
-    })
+    //can interact with this.props here
 
     return (
       <table className="table table-condensed">
@@ -50,7 +38,7 @@ class MovieTable extends React.Component {
           <tr><th className="col-xs-1">Poster</th><th className="col-xs-4">Title</th><th>Released</th></tr>
         </thead>
         <tbody>
-          {movieRows}
+          <MovieRow />
         </tbody>
       </table>      
     );
@@ -61,43 +49,10 @@ class MovieRow extends React.Component {
   render() {
     return (
       <tr>
-        <td><img className="poster-lg" src={MovieController.getPosterUrl(this.props.movie)} alt="poster for {this.props.movie.title}"/></td>
-        <td>{this.props.movie.title}</td>
-        <td>{this.props.movie.release_date}</td>
+        <td><img className="poster-lg" src="movie poster_url" alt="poster for movie title"/></td>
+        <td>Movie Title</td>
+        <td>Movie Release Date</td>
       </tr>
-    );
-  }
-}
-
-class SearchForm extends React.Component {
-
-  constructor(props){
-    super(props);
-    this.state = {value:''}
-  }
-
-  handleChange(event){
-    this.setState({value:event.target.value});
-    //this.props.searchFunction(searchTerm);
-  }
-
-  handleClick(event) {
-    this.props.searchFunction(this.state.value);
-  }
-
-  render() {
-    return (
-      <Form inline>
-        <InputGroup>
-          <InputGroup.Button>
-            <Button onClick={this.handleClick.bind(this)}><Glyphicon glyph="search"/></Button>
-          </InputGroup.Button>
-          <FormControl type="text" placeholder="Search for a movie..." onChange={this.handleChange.bind(this)} />
-          <InputGroup.Addon>
-            {this.props.resultCount} results
-          </InputGroup.Addon>
-        </InputGroup>
-      </Form>
     );
   }
 }
