@@ -30,15 +30,19 @@ class App extends React.Component {
 class MovieTable extends React.Component {
   render() {
 
-    //can interact with this.props here
-
+    //can interact with this.props here, the movies array from line22 MovieTable movies = {SAMPLE_MOVIES}
+    //make it into a varriable rows
+    var rows = this.props.movies.map(function(movieobj){
+      return <MovieRow movie={movieobj} />; //pass  movie
+    })
+    
     return (
       <table className="table table-condensed">
         <thead>
           <tr><th className="col-xs-1">Poster</th><th className="col-xs-4">Title</th><th>Released</th></tr>
         </thead>
         <tbody>
-          <MovieRow />
+        {rows}
         </tbody>
       </table>      
     );
@@ -48,10 +52,12 @@ class MovieTable extends React.Component {
 class MovieRow extends React.Component {
   render() {
     return (
+      //then change this so you can view the movie title, this.props.movie.title to display the movie's title
+      //change the poster to {this.props.movie.poster_url} and then release date to {this.props.movie.release_date} look at the var SAMPLE_MOVIES array for the correct item names
       <tr>
-        <td><img className="poster-lg" src="movie poster_url" alt="poster for movie title"/></td>
-        <td>Movie Title</td>
-        <td>Movie Release Date</td>
+        <td><img className="poster-lg" src={this.props.movie.poster_url} alt="poster for movie title"/></td>
+        <td>{this.props.movie.title}</td> 
+        <td>{this.props.movie.release_date}</td>
       </tr>
     );
   }
